@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Home Page</title>
+  </head>
+
+  <body>
+    <a href="/login">Login</a> <a href="/logout">Logout</a>
+    <p>
+      Authed: {{#if isAuthed}} yes {{else}} no {{/if}}
+    </p>
+    <p>
+      User: {{#if isAuthed}} {{user}} {{else}} none {{/if}}
+    </p>
+  </body>
+
+</html>

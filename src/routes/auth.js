@@ -1,8 +1,5 @@
 const express = require('express')
 const passport = require('passport')
-const util = require('util')
-const url = require('url')
-const querystring = require('querystring')
 const authed = require('../middleware/authed')
 const router = express.Router()
 
@@ -25,7 +22,7 @@ router.get('/callback', (req, res, next) => {
         }
       })
       req.session.user = userInfo.get({ plain: true })
-      res.redirect('/user')
+      res.redirect('/')
     })
   })(req, res, next)
 })

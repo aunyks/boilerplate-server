@@ -17,6 +17,8 @@ const morgan = require('morgan')
 const session = require('express-session')
 const passport = require('passport')
 const Auth0auth0Strategy = require('passport-auth0')
+const exphbs = require('express-handlebars')
+const { join } = require('path')
 const sequelize = new Sequelize(DB_CONNECTION_STRING)
 
 const models = require('./models')(Sequelize, sequelize)
@@ -28,7 +30,7 @@ const auth0Strategy = new Auth0auth0Strategy(
     clientID: AUTH0_CLIENT_ID,
     clientSecret: AUTH0_CLIENT_SECRET,
     callbackURL:
-      AUTH0_CALLBACK_URL || 'http://localhost:3000/callback'
+      AUTH0_CALLBACK_URL || 'http://localhost:4000/callback'
   },
   (accessToken, refreshToken, extraParams, profile, done) => {
     // accessToken is the token to call Auth0 API (not needed in the most cases)
@@ -57,6 +59,9 @@ const authRoutes = require('./routes/auth')
 const app = express()
 app.use(morgan('dev'))
 app.use(express.static('static'))
+app.engine('handlebars', exphbs())
+app.set('views', join(__dirname, 'views'))
+app.set('view engine', 'handlebars')
 app.use((req, res, next) => {
   req.models = models
   next()
@@ -75,12 +80,12 @@ app.use(passport.session())
 app.use('/api', apiRoutes)
 app.use('/', authRoutes)
 
-app.get('/user', authed(), (req, res) => {
-  res.json(req.session.user)
-})
-
 app.get('/', (req, res) => {
-  res.sendStatus(200)
+  res.render('home', {
+    layout: false,
+    isAuthed: req.isAuthenticated(),
+    user: JSON.stringify(req.session.user),
+  })
 })
 
 const server = app.listen(SERVER_BIND_PORT || '3000', () => {
