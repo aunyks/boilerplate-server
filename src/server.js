@@ -53,12 +53,14 @@ const sessionConfig = {
 }
 
 const authed = require('./middleware/authed')
+const secureHeaders = require('./middleware/secure-headers')
 const apiRoutes = require('./routes/api')
 const authRoutes = require('./routes/auth')
 
 const app = express()
 app.use(morgan('dev'))
 app.use(express.static('static'))
+app.use(secureHeaders())
 app.engine('handlebars', exphbs())
 app.set('views', join(__dirname, 'views'))
 app.set('view engine', 'handlebars')
