@@ -84,6 +84,7 @@ app.use('/', authRoutes)
 
 app.get('/', (req, res) => {
   res.render('home', {
+    metaLink: 'https://example.com',
     layout: false,
     isAuthed: req.isAuthenticated(),
     user: JSON.stringify(req.session.user),
